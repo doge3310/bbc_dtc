@@ -3,9 +3,6 @@ import csv
 from torch.utils.data import Dataset
 
 from src.data_init.tokenizer import BPETokenizer
-from src.preferences import (
-    DICT_SIZE
-)
 
 
 class BBCDataset(Dataset):
@@ -55,13 +52,3 @@ class BBCDataset(Dataset):
 
     def __getitem__(self, index):
         return self.dataset[index]
-
-
-if __name__ == "__main__":
-    tokenizer = BPETokenizer(
-        max_tokens_count=DICT_SIZE
-    )
-    dataset = BBCDataset(
-        dataset_dir="./data/raw_data.csv",
-        tokenizer=tokenizer)
-    dataset.sumary()
