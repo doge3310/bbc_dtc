@@ -1,10 +1,7 @@
-import re
-
-
 class BPETokenizer:
     def __init__(
             self,
-            max_tokens_count: int = 9,
+            max_tokens_count: int = 10000,
             unk_id: int = -1):
         self.max_tokens_count = max_tokens_count
         self.dct = {}
@@ -82,12 +79,4 @@ class BPETokenizer:
                 tokens.append(self.unk_id)
                 i += 1
 
-        print(self.sorted_tokens, self.dct)
-
         return tokens
-
-
-if __name__ == "__main__":
-    tokenizer = BPETokenizer()
-    tokenizer.forward("abc abc abc ash bc cb")
-    print(tokenizer.tokenize("abc bc a cb j"))
