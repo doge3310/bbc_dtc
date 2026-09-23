@@ -221,4 +221,4 @@ __marimo__/
 .vscode
 
 # Dataset
-data/
+data/raw_data.csv
