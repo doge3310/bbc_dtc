@@ -24,4 +24,4 @@ bbc_loader = DataLoader(
 
 if __name__ == "__main__":
     bbc_loader = iter(bbc_loader)
-    print(next(bbc_loader)[0][0])
+    print(next(bbc_loader))
