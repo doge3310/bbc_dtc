@@ -1,17 +1,19 @@
 """Initialize dataset from .csv source"""
 import csv
 from torch.utils.data import Dataset
-from torch import cat, tensor, zeros
+from torch import tensor
 
 from src.data_init.tokenizer import BPETokenizer
+from src.preferences import SEQ_LENTH
 
 
 class BBCDataset(Dataset):
-    def __init__(self, dataset_dir: str, tokenizer: BPETokenizer):
+    def __init__(self, dataset_dir: str, tokenizer: BPETokenizer, tgt_len: int):
         self.dataset = []
         self.statistic = {}
         self.label_stats = {}
         self.tokenizer = tokenizer
+        self.tgt_len = tgt_len
 
         with open(dataset_dir, "r", encoding="utf-8") as data:
             data = csv.reader(data)
@@ -40,20 +42,11 @@ class BBCDataset(Dataset):
         self._tokenize()
 
     def _tokenize(self):
-        max_len = 0
         labels = list(self.label_stats.keys())
 
         for index, data in enumerate(self.dataset):
-            self.dataset[index][0] = self.tokenizer.tokenize(data[0])
-            max_len = max(len(data[0]), max_len)
-
-        for index, item in enumerate(self.dataset):
-            data = tensor(item[0])
-
-            self.dataset[index][0] = cat(
-                [data, zeros(max_len - len(data))]
-            )
-            self.dataset[index][1] = labels.index(item[1])
+            self.dataset[index][0] = self.tokenizer.tokenize(data[0], self.tgt_len)
+            self.dataset[index][1] = labels.index(data[1])
 
     def text_sumary(self):
         """Print data about raw text (not tokenized)"""
@@ -67,11 +60,11 @@ class BBCDataset(Dataset):
         return len(self.dataset)
 
     def __getitem__(self, index):
-        return self.dataset[index]
+        return [tensor(i) for i in self.dataset[index]]
 
 
 if __name__ == "__main__":
     tokenizer = BPETokenizer(max_tokens_count=95)
-    dataset = BBCDataset("./data/raw_data.csv", tokenizer)
+    dataset = BBCDataset("./data/raw_data.csv", tokenizer, SEQ_LENTH)
     dataset.text_sumary()
     print(dataset[0])

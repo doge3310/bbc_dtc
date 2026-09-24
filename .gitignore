@@ -219,6 +219,7 @@ __marimo__/
 
 # vscode
 .vscode
+src/info.md
 
 # Dataset
 data/raw_data.csv

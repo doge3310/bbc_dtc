@@ -4,7 +4,8 @@ from torch.utils.data import DataLoader
 from src.data_init.dataset import BBCDataset
 from src.data_init.tokenizer import BPETokenizer
 from src.preferences import \
-    (DATASET_DIR, BATCH_SIZE, DICT_SIZE)
+    (DATASET_DIR, BATCH_SIZE, DICT_SIZE,
+     SEQ_LENTH)
 
 
 tokenizer = BPETokenizer(
@@ -12,7 +13,8 @@ tokenizer = BPETokenizer(
 )
 dataset = BBCDataset(
     dataset_dir=DATASET_DIR,
-    tokenizer=tokenizer
+    tokenizer=tokenizer,
+    tgt_len=SEQ_LENTH
 )
 bbc_loader = DataLoader(
     dataset=dataset,
@@ -21,7 +23,9 @@ bbc_loader = DataLoader(
     drop_last=True
 )
 
-
 if __name__ == "__main__":
     bbc_loader = iter(bbc_loader)
-    print(next(bbc_loader))
+    data = next(bbc_loader)
+
+    print(data[0][0])
+    print([i.size() for i in data])
