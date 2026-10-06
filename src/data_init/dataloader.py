@@ -3,13 +3,13 @@ from torch.utils.data import DataLoader
 
 from src.data_init.dataset import BBCDataset
 from src.data_init.tokenizer import BPETokenizer
-from src.preferences import \
-    (DATASET_DIR, BATCH_SIZE, DICT_SIZE,
-     SEQ_LENTH)
+from src.preferences import *
 
 
 tokenizer = BPETokenizer(
-    max_tokens_count=DICT_SIZE
+    max_tokens_count=DICT_SIZE,
+    unk_id=UNK,
+    pad_id=PAD
 )
 dataset = BBCDataset(
     dataset_dir=DATASET_DIR,

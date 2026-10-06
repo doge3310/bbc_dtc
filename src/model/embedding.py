@@ -1,18 +1,23 @@
 import torch
-from torch import nn, rand, arange, zeros, exp, sin, cos
+from torch import nn, arange, zeros, exp, sin, cos
 from math import log
 
 
 class TokenEmbedding(nn.Module):
-    def __init__(self, vocab_size: int, d_model: int = 512):
+    def __init__(self, vocab_size: int, d_model: int = 512, pad_index: int = 0):
         super().__init__()
 
-        self.weights = nn.Parameter(
-            rand(vocab_size, d_model)
+        self.embeds = nn.Embedding(
+            num_embeddings=vocab_size,
+            embedding_dim=d_model,
+            padding_idx=pad_index
         )
+        nn.init.normal_(self.embeds.weight, std=0.02)
+        with torch.no_grad():
+            self.embeds.weight[pad_index].zero_()
 
     def forward(self, index):
-        return self.weights[index]
+        return self.embeds(index)
 
 
 class PositionalEmbedding(nn.Module):

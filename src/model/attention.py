@@ -44,7 +44,7 @@ class MultiHeadAttention(nn.Module):
             i(x, mask) for i in self.attention
         ], dim=-1)
 
-        return self.Ow(attention)
+        return self.drop(self.Ow(attention))
 
 
 def pad_mask(x: torch.Tensor, pad_index: int = 0):
