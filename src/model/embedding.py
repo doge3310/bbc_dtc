@@ -1,5 +1,5 @@
 import torch
-from torch import nn, arange, zeros, exp, sin, cos
+from torch import Tensor, nn, arange, zeros, exp, sin, cos
 from math import log
 
 
@@ -8,7 +8,7 @@ class TokenEmbedding(nn.Module):
         super().__init__()
 
         self.embeds = nn.Embedding(
-            num_embeddings=vocab_size,
+            num_embeddings=vocab_size + 1,
             embedding_dim=d_model,
             padding_idx=pad_index
         )
@@ -16,7 +16,7 @@ class TokenEmbedding(nn.Module):
         with torch.no_grad():
             self.embeds.weight[pad_index].zero_()
 
-    def forward(self, index):
+    def forward(self, index: Tensor):
         return self.embeds(index)
 
 

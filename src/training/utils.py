@@ -35,4 +35,4 @@ class Learn:
         loss.backward()
         self.optim.step()
 
-        return loss.item()
+        return loss.item(), output

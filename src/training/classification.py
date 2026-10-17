@@ -26,17 +26,18 @@ def main():
         label_smoothing=LABEL_SMOOTHING,
         device=device
     )
-    dataset = iter(bbc_loader)
 
     for epoch in range(EPOCH):
+        dataset = iter(bbc_loader)
+
         for src, tgt in dataset:
-            loss = learn_cycle.step(
+            loss, out = learn_cycle.step(
                 src=src,
                 tgt=tgt
             )
-            print(loss)
+            print(loss, tgt)
 
-        print(epoch, loss)
+        print(epoch, loss, tgt, out)
 
 
 if __name__ == "__main__":

@@ -67,4 +67,3 @@ if __name__ == "__main__":
     tokenizer = BPETokenizer(max_tokens_count=90)
     dataset = BBCDataset("./data/raw_data.csv", tokenizer, SEQ_LENTH)
     dataset.text_sumary()
-    print(dataset[0])

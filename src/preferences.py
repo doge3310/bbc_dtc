@@ -5,14 +5,14 @@ from pathlib import Path
 MAIN_DIR = Path(__file__).resolve().parent
 DATASET_DIR = MAIN_DIR.parent / "data" / "raw_data.csv"
 
-BATCH_SIZE = 4
-DICT_SIZE = 90
-SEQ_LENTH = 1500
+BATCH_SIZE = 32
+DICT_SIZE = 120
+SEQ_LENTH = 800
 PAD = 0
 UNK = 1
 N_LABELS = 5
 
-D_MODEL = 512
+D_MODEL = 128
 LR = 10e-5
 EPOCH = 30
 LABEL_SMOOTHING = 1e-5
