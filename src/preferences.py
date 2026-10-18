@@ -6,8 +6,8 @@ MAIN_DIR = Path(__file__).resolve().parent
 DATASET_DIR = MAIN_DIR.parent / "data" / "raw_data.csv"
 
 BATCH_SIZE = 32
-DICT_SIZE = 120
-SEQ_LENTH = 800
+DICT_SIZE = 700
+SEQ_LENTH = 1500
 PAD = 0
 UNK = 1
 N_LABELS = 5

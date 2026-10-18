@@ -1,7 +1,7 @@
 class BPETokenizer:
     def __init__(
             self,
-            max_tokens_count: int = 10000,
+            max_tokens_count: int = 1000,
             unk_id: int = 1,
             pad_id: int = 0):
         self.max_tokens_count = max_tokens_count
@@ -53,16 +53,18 @@ class BPETokenizer:
 
         return result
 
-    def forward(self, text: str):
+    def forward(self, text: str, text_len: int = 1000000):
+        text = text[: text_len]
         offset = len(self.reserved_tokens)
+
         self.dct = {token: index + offset
                     for index, token in enumerate(dict.fromkeys(text))}
 
         while len(self.dct) < self.max_tokens_count and len(text) > 1:
             text = self._step(text=text)
 
-            unique = list(dict.fromkeys(text))
-            self.dct = {token: index + offset for index, token in enumerate(unique)}
+        self.dct = {token: index + offset for index, token in
+            enumerate(dict.fromkeys(text))}
 
         self.sorted_tokens = sorted(
             [t for t in self.dct.keys() if t],
