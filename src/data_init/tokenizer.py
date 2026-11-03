@@ -1,93 +1,54 @@
-class BPETokenizer:
-    def __init__(
-            self,
-            max_tokens_count: int = 1000,
-            unk_id: int = 1,
-            pad_id: int = 0):
-        self.max_tokens_count = max_tokens_count
-        self.dct = {}
-        self.unk_id = unk_id
-        self.pad_id = pad_id
-        self.reserved_tokens = {"PAD": pad_id, "UNK": unk_id}
-        self.sorted_tokens = []
+import re
+from collections import Counter
 
-    def _most_popular(self, text: str):
-        popular_map = {}
+from src.interfaces.idata import ITokenizer
 
-        for index, token in enumerate(text):
-            if index + 1 == len(text):
-                break
 
-            token = token + text[index + 1]
+class WordTokenizer(ITokenizer):
+	def __init__(self,
+		pad_token: int = 0,
+		unk_token: int = 1,
+		dict_size: int = 2000):
 
-            try:
-                popular_map[token] += 1
+		super().__init__(pad_token, unk_token, dict_size)
 
-            except KeyError:
-                popular_map[token] = 1
+		self.dict_size = dict_size
+		self.unk_token = unk_token
+		self.dict = {"PAD": pad_token, "UNK": unk_token}
 
-        if not popular_map:
-            return None
+	def _split(self,
+		text: str):
 
-        return max(popular_map, key=popular_map.get)
+		return re.split(pattern=r"[^\w]+", string=text.lower())
 
-    def _step(self, text: list[str]):
-        most_freq_token = self._most_popular(text)
-        is_skip = 0
-        result = []
+	def forward(self,
+		text: str):
 
-        for index, item in enumerate(text):
-            if is_skip:
-                is_skip = 0
-                continue
+		super().forward(text)
 
-            if index + 1 < len(text) and \
-                most_freq_token == item + text[index + 1]:
+		splited_text = self._split(text)
+		counts = Counter(splited_text)
+		top_words = counts.most_common(self.dict_size - 2)
 
-                result.append(most_freq_token)
-                is_skip = 1
+		for token, (word, _) in enumerate(top_words, 2):
+			self.dict[word] = token
 
-                continue
+		return self.dict
 
-            result.append(item)
+	def tokenize(self,
+		text: str):
 
-        return result
+		super().tokenize(text)
 
-    def forward(self, text: str, text_len: int = 1000000):
-        text = text[: text_len]
-        offset = len(self.reserved_tokens)
+		splited_text = self._split(text=text)
+		tokenized_text = []
 
-        self.dct = {token: index + offset
-                    for index, token in enumerate(dict.fromkeys(text))}
+		for word in splited_text:
+			if word:
+				try:
+					tokenized_text.append(self.dict[word.lower()])
 
-        while len(self.dct) < self.max_tokens_count and len(text) > 1:
-            text = self._step(text=text)
+				except KeyError:
+					tokenized_text.append(self.unk_token)
 
-        self.dct = {token: index + offset for index, token in
-            enumerate(dict.fromkeys(text))}
-
-        self.sorted_tokens = sorted(
-            [t for t in self.dct.keys() if t],
-            key=len, reverse=True
-        )
-
-    def tokenize(self, x: str, tgt_length: int):
-        tokens = []
-        i = 0
-
-        while len(tokens) < tgt_length:
-            if i >= len(x):
-                tokens.append(self.pad_id)
-                continue
-
-            for token in self.sorted_tokens:
-                if x.startswith(token, i):
-                    tokens.append(self.dct[token])
-                    i += len(token)
-                    break
-
-            else:
-                tokens.append(self.unk_id)
-                i += 1
-
-        return tokens
+		return tokenized_text
