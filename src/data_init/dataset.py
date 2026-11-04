@@ -3,12 +3,12 @@ import csv
 from torch.utils.data import Dataset
 from torch import tensor
 
-from src.data_init.tokenizer import BPETokenizer
 from src.preferences import SEQ_LENTH
+from src.interfaces.idata import ITokenizer
 
 
 class BBCDataset(Dataset):
-    def __init__(self, dataset_dir: str, tokenizer: BPETokenizer, tgt_len: int):
+    def __init__(self, dataset_dir: str, tokenizer: ITokenizer, tgt_len: int):
         self.dataset = []
         self.statistic = {}
         self.label_stats = {}
@@ -42,10 +42,10 @@ class BBCDataset(Dataset):
         self._tokenize()
 
     def _tokenize(self):
-        labels = list(self.label_stats.keys())
+        labels = sorted(list(self.label_stats.keys()))
 
         for index, data in enumerate(self.dataset):
-            self.dataset[index][0] = self.tokenizer.tokenize(data[0], self.tgt_len)
+            self.dataset[index][0] = self.tokenizer.tokenize(data[0])[: self.tgt_len]
             self.dataset[index][1] = labels.index(data[1])
 
     def text_sumary(self):
@@ -64,6 +64,4 @@ class BBCDataset(Dataset):
 
 
 if __name__ == "__main__":
-    tokenizer = BPETokenizer(max_tokens_count=90)
-    dataset = BBCDataset("./data/raw_data.csv", tokenizer, SEQ_LENTH)
-    dataset.text_sumary()
+    pass

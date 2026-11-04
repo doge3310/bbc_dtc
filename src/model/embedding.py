@@ -8,7 +8,7 @@ class TokenEmbedding(nn.Module):
         super().__init__()
 
         self.embeds = nn.Embedding(
-            num_embeddings=vocab_size + 1,
+            num_embeddings=vocab_size,
             embedding_dim=d_model,
             padding_idx=pad_index
         )
