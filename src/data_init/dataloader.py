@@ -35,10 +35,3 @@ bbc_loader = DataLoader(
     drop_last=True,
     collate_fn=collate_fn
 )
-
-if __name__ == "__main__":
-    bbc_loader = iter(bbc_loader)
-    data = next(bbc_loader)
-
-    print(data[0][0])
-    print([i.size() for i in data])

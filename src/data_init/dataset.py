@@ -2,6 +2,7 @@
 import csv
 from torch.utils.data import Dataset
 from torch import tensor
+from pathlib import Path
 
 from src.preferences import SEQ_LENTH
 from src.interfaces.idata import ITokenizer
@@ -38,7 +39,7 @@ class BBCDataset(Dataset):
 
         self.statistic["rows_count"] = len(self.dataset)
 
-        self.tokenizer.forward(" ".join((item[0] for item in self.dataset)))
+        self.dictionary = self.tokenizer.forward(" ".join((item[0] for item in self.dataset)))
         self._tokenize()
 
     def _tokenize(self):
@@ -55,13 +56,16 @@ class BBCDataset(Dataset):
 
     def dataset_summary(self):
         pass
+    
+    def export_dictionary_as_file(self, directory: Path) -> None:
+        with open(directory / "dictionary.csv", mode="w", encoding="utf-8", newline="") as file:
+            dict_file = csv.writer(file)
+
+            dict_file.writerow(["word", "token"])
+            dict_file.writerows(self.dictionary.items())
 
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, index):
         return [tensor(i) for i in self.dataset[index]]
-
-
-if __name__ == "__main__":
-    pass
