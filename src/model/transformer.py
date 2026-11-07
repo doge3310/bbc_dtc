@@ -1,6 +1,5 @@
 import torch
 from torch import nn
-from pathlib import Path
 
 from src.model.attention import MultiHeadAttention, pad_mask
 from src.model.embedding import PositionalEmbedding, TokenEmbedding

@@ -3,8 +3,6 @@ from torch import nn, optim, Tensor
 from torch.export import Dim
 from pathlib import Path
 
-from src.data_init.dataset import BBCDataset
-
 
 class Learn:
     def __init__(

@@ -5,6 +5,7 @@ from pathlib import Path
 MAIN_DIR = Path(__file__).resolve().parent
 DATASET_DIR = MAIN_DIR.parent / "data" / "raw_data.csv"
 EXPORT_DIR = MAIN_DIR.parent / "model_export"
+LOGGER_DIR = MAIN_DIR.parent / "logs"
 
 BATCH_SIZE = 32
 DICT_SIZE = 4000
@@ -18,5 +19,5 @@ LR = 10e-5
 EPOCH = 1
 LABEL_SMOOTHING = 1e-5
 ATTENTION_HEAD = 4
-MODEL_SIZE = 8
+N_LAYERS = 8
 DROPOUT = 0.1

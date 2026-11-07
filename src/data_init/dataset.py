@@ -4,7 +4,6 @@ from torch.utils.data import Dataset
 from torch import tensor
 from pathlib import Path
 
-from src.preferences import SEQ_LENTH
 from src.interfaces.idata import ITokenizer
 
 
@@ -49,13 +48,10 @@ class BBCDataset(Dataset):
             self.dataset[index][0] = self.tokenizer.tokenize(data[0])[: self.tgt_len]
             self.dataset[index][1] = labels.index(data[1])
 
-    def text_sumary(self):
+    def text_summary(self):
         """Print data about raw text (not tokenized)"""
         print(self.statistic)
         print(self.label_stats)
-
-    def dataset_summary(self):
-        pass
     
     def export_dictionary_as_file(self, directory: Path) -> None:
         with open(directory / "dictionary.csv", mode="w", encoding="utf-8", newline="") as file:

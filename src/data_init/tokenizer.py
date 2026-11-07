@@ -19,7 +19,7 @@ class WordTokenizer(ITokenizer):
 	def _split(self,
 		text: str):
 
-		return re.split(pattern=r"[^\w]+", string=text.lower())
+		return [w for w in re.split(pattern=r"[^\w]+", string=text.lower()) if w]
 
 	def forward(self,
 		text: str):
