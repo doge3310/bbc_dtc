@@ -1,5 +1,6 @@
 """Initialize dataset from .csv source"""
 import csv
+import logging
 from torch.utils.data import Dataset
 from torch import tensor
 from pathlib import Path
@@ -7,8 +8,16 @@ from pathlib import Path
 from src.interfaces.idata import ITokenizer
 
 
+logger = logging.getLogger(__name__)
+
+
 class BBCDataset(Dataset):
-    def __init__(self, dataset_dir: str, tokenizer: ITokenizer, tgt_len: int):
+    def __init__(self,
+        dataset_dir: str,
+        tokenizer: ITokenizer,
+        tgt_len: int
+) -> None:
+
         self.dataset = []
         self.statistic = {}
         self.label_stats = {}
@@ -38,6 +47,11 @@ class BBCDataset(Dataset):
 
         self.statistic["rows_count"] = len(self.dataset)
 
+        logger.info("dataset loaded: rows: %d, labels: %s",
+            self.statistic["rows_count"],
+            list(self.label_stats.keys())
+        )
+
         self.dictionary = self.tokenizer.forward(" ".join((item[0] for item in self.dataset)))
         self._tokenize()
 
@@ -50,9 +64,9 @@ class BBCDataset(Dataset):
 
     def text_summary(self):
         """Print data about raw text (not tokenized)"""
-        print(self.statistic)
-        print(self.label_stats)
-    
+        logger.info("statistic: %s", self.statistic)
+        logger.info("labels_stats: %s", self.label_stats)
+
     def export_dictionary_as_file(self, directory: Path) -> None:
         with open(directory / "dictionary.csv", mode="w", encoding="utf-8", newline="") as file:
             dict_file = csv.writer(file)
