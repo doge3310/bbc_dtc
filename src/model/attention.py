@@ -17,7 +17,7 @@ class Attention(nn.Module):
         V = self.Vw(x)
 
         scores = (Q @ K.transpose(-2, -1)) / (self.d_head ** 0.5)
-        scores: torch.Tensor = scores.masked_fill(mask, float("-inf"))
+        scores: torch.Tensor = scores.masked_fill(mask, -1e9)
         attention = torch.softmax(
             scores,
             dim=-1) @ V
