@@ -1,8 +1,12 @@
+import logging
 from torch.utils.data import DataLoader
 
 from src.config import *
 from src.training.utils import Learn
 from src.model.transformer import Transformer
+
+
+logger = logging.getLogger(__name__)
 
 
 def learn(
@@ -29,13 +33,23 @@ def learn(
     )
 
     for epoch in range(EPOCH):
-        for src, tgt in dataloader:
-            loss, out = learn_cycle.step(
+        total_loss = 0.0
+
+        for step, (src, tgt) in enumerate(dataloader, 1):
+            loss, _ = learn_cycle.step(
                 src=src,
                 tgt=tgt
             )
-            print(loss, tgt)
+            total_loss += loss
 
-        print(epoch, loss, tgt, out)
+            logger.debug("epoch: %d, loss: %.4f",
+                epoch, loss)
+
+            if step % 50 == 0:
+                logger.info("epoch: %d, step: %d, mean_loss: %.4f",
+                    epoch, step, total_loss / step)
+
+        logger.info("epoch: %d, mean_loss: %.4f",
+            epoch, total_loss / step)
 
     return model

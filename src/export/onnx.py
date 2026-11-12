@@ -1,4 +1,5 @@
 from torch import nn
+from pathlib import Path
 
 from src.training.utils import Learn, export_model
 from src.data_init.dataset import BBCDataset

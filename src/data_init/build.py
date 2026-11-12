@@ -7,7 +7,7 @@ from src.config import *
 from src.data_init.collate import collate_fn
 
 
-def construct_dataloader() -> tuple[Dataset, DataLoader]:
+def construct_dataloader() -> tuple[BBCDataset, DataLoader]:
     tokenizer = WordTokenizer(
         pad_token=PAD,
         unk_token=UNK,
