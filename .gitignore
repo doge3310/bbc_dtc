@@ -226,3 +226,6 @@ data/raw_data.csv
 
 # Model
 /model_export
+
+#Logs
+/logs

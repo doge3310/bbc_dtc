@@ -49,7 +49,7 @@ def learn(
                 logger.info("epoch: %d, step: %d, mean_loss: %.4f",
                     epoch, step, total_loss / step)
 
-        logger.info("epoch: %d, mean_loss: %.4f",
+        logger.info("epoch: %d done, mean_loss: %.4f",
             epoch, total_loss / step)
 
     return model

@@ -32,3 +32,5 @@ def setting_logger(logger_dir: Path) -> None:
 
     logging.getLogger("torch").setLevel(logging.WARNING)
     logging.getLogger("urllib3").setLevel(logging.WARNING)
+    logging.getLogger("onnxscript").setLevel(logging.WARNING)
+    logging.getLogger("onnx_ir").setLevel(logging.WARNING)

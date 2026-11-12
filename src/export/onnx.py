@@ -1,9 +1,13 @@
 from torch import nn
 from pathlib import Path
+import logging
 
 from src.training.utils import Learn, export_model
 from src.data_init.dataset import BBCDataset
 from src.config import *
+
+
+logger = logging.getLogger(__name__)
 
 
 def export(
@@ -30,3 +34,5 @@ def export(
     dataset.export_dictionary_as_file(
         directory=save_dir
     )
+
+    logger.info("dictionary exported to %s", save_dir / "dictionary.csv")
