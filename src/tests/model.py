@@ -1,5 +1,4 @@
 import torch
-from torchinfo import summary
 import unittest
 
 from src.model.transformer import Transformer
