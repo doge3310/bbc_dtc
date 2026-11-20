@@ -5,7 +5,7 @@ from src.config import *
 from src.data_init.tokenizer import WordTokenizer
 
 
-class TestModel(unittest.TestCase):
+class TestTokenizer(unittest.TestCase):
     def setUp(self):
         self.tokenizer = WordTokenizer(
             pad_token=PAD,
