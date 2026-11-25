@@ -27,7 +27,6 @@ def learn(
     learn_cycle = Learn(
         model=model,
         lr=LR,
-        pad_index = PAD,
         label_smoothing=LABEL_SMOOTHING,
         device=device
     )

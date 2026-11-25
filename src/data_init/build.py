@@ -1,10 +1,17 @@
-"""Initialize dataloader from dataset"""
-from torch.utils.data import DataLoader, Dataset
+"""Initialize dataloaders from dataset"""
+from torch.utils.data import DataLoader
 
-from src.data_init.dataset import BBCDataset
+from src.data_init.dataset import BBCDataset, import_data
 from src.data_init.tokenizer import WordTokenizer
 from src.config import *
 from src.data_init.collate import collate_fn
+
+
+def split_rows(
+    rows: list[list[str]],
+    rations: tuple[float, float, float]
+):
+    pass
 
 
 def construct_dataloader() -> tuple[BBCDataset, DataLoader]:
@@ -13,12 +20,10 @@ def construct_dataloader() -> tuple[BBCDataset, DataLoader]:
         unk_token=UNK,
         dict_size=DICT_SIZE
     )
-    dataset = BBCDataset(
-        dataset_dir=DATASET_DIR,
-        tokenizer=tokenizer,
-        tgt_len=SEQ_LENTH
+    training_dataset = BBCDataset(
+        
     )
-    bbc_loader = DataLoader(
+    training_loader = DataLoader(
         dataset=dataset,
         batch_size=BATCH_SIZE,
         shuffle=True,
@@ -26,4 +31,4 @@ def construct_dataloader() -> tuple[BBCDataset, DataLoader]:
         collate_fn=collate_fn
     )
 
-    return dataset, bbc_loader
+    return training_loader

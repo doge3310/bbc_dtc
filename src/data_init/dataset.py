@@ -11,71 +11,57 @@ from src.interfaces.idata import ITokenizer
 logger = logging.getLogger(__name__)
 
 
+def import_data(
+    dataset_dir: Path
+) -> tuple[list, dict]:
+
+    dataset = []
+    labels = {}
+
+    with open(dataset_dir, "r", encoding="utf-8") as data:
+        data = csv.reader(data)
+
+        for row_num, row in enumerate(data):
+            if row_num == 0:
+                continue
+
+            labels[row[1]] = labels.get(row[1], 0) + 1
+
+            dataset.append(row)
+
+    return dataset, labels
+
+
 class BBCDataset(Dataset):
     def __init__(self,
-        dataset_dir: str,
+        rows: list[list[str]],
         tokenizer: ITokenizer,
-        tgt_len: int
+        tgt_len: int,
+        labels: dict[str, int]
 ) -> None:
 
-        self.dataset = []
-        self.statistic = {}
-        self.label_stats = {}
         self.tokenizer = tokenizer
         self.tgt_len = tgt_len
-
-        with open(dataset_dir, "r", encoding="utf-8") as data:
-            data = csv.reader(data)
-
-            for row_num, row in enumerate(data):
-                if row_num == 0:
-                    continue
-
-                row_lenth = len(row[0])
-
-                self.label_stats[row[1]] = self.label_stats.get(row[1], 0) + 1
-
-                self.statistic["min_text_len"] = min(
-                    self.statistic.get("min_text_len", row_lenth),
-                    row_lenth)
-
-                self.statistic["max_text_len"] = max(
-                    self.statistic.get("max_text_len", row_lenth),
-                    row_lenth)
-
-                self.dataset.append(row)
-
-        self.statistic["rows_count"] = len(self.dataset)
+        self.labels = labels
+        self.dataset = rows.copy()
+        self.rows_num = len(self.dataset)
 
         logger.info("dataset loaded: rows: %d, labels: %s",
-            self.statistic["rows_count"],
-            list(self.label_stats.keys())
+            self.rows_num,
+            list(labels.keys())
         )
 
-        self.dictionary = self.tokenizer.forward(" ".join((item[0] for item in self.dataset)))
         self._tokenize()
 
     def _tokenize(self):
-        labels = sorted(list(self.label_stats.keys()))
+        labels = sorted(list(self.labels.keys()))
 
         for index, data in enumerate(self.dataset):
             self.dataset[index][0] = self.tokenizer.tokenize(data[0])[: self.tgt_len]
             self.dataset[index][1] = labels.index(data[1])
 
-    def text_summary(self):
-        """Print data about raw text (not tokenized)"""
-        logger.info("statistic: %s", self.statistic)
-        logger.info("labels_stats: %s", self.label_stats)
-
-    def export_dictionary_as_file(self, directory: Path) -> None:
-        with open(directory / "dictionary.csv", mode="w", encoding="utf-8", newline="") as file:
-            dict_file = csv.writer(file)
-
-            dict_file.writerow(["word", "token"])
-            dict_file.writerows(self.dictionary.items())
-
     def __len__(self):
-        return len(self.dataset)
+        return self.rows_num
 
     def __getitem__(self, index):
         return [tensor(i) for i in self.dataset[index]]

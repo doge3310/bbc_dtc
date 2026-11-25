@@ -12,7 +12,7 @@ def main():
     setting_logger(LOGGER_DIR)
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    dataset, dataloader = construct_dataloader()
+    dataloader = construct_dataloader()
     model = learn(
         device=device,
         dataloader=dataloader)
@@ -20,7 +20,6 @@ def main():
     export(
         model=model,
         save_dir=EXPORT_DIR,
-        dataset=dataset,
         device=device
     )
 
