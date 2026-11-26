@@ -43,7 +43,7 @@ class BBCDataset(Dataset):
         self.tokenizer = tokenizer
         self.tgt_len = tgt_len
         self.labels = labels
-        self.dataset = rows.copy()
+        self.dataset: list = rows.copy()
         self.rows_num = len(self.dataset)
 
         logger.info("dataset loaded: rows: %d, labels: %s",
